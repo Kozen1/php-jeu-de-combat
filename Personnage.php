@@ -1,38 +1,45 @@
 <?php
 
 class Personnage {
+    private static $_id = 0;
     private $_nom; // Son nom
     private $_force; // La force du personnage
     private $_experience; // Son exprience
     private $_pv; // Ses points de vie
 
-    public function __construct(string $nom, string $force) {
+    const FORCE_PETITE = 20;
+    const FORCE_MOYENNE = 50;
+    const FORCE_GRANDE = 80;
+
+    public function __construct(string $nom, int $force) {
+        self::$_id++;
         $this->_nom = $nom;
         $this->setPv(100);
         $this->setForce($force);
         $this->setExperience(0);
     }
 
+    public function __toString() {
+        return "</br>Je m'appelle " . $this->_nom 
+        . " ma force est : " . intval($this->_force) . "</br>"
+        . " mes points de vie sont : " . intval($this->_pv ) . "</br>"
+        . " mon expérience est : " . intval($this->_experience) . "</br>";
+    }
+
     // Nous déclarons une méthode dont le seul but 
     public function parler() 
     {
-        print("</br>Je m'appelle " . ($this->_nom) 
-        . " ma force est : " . intval($this->_force) . "</br>"
-        . " mes points de vie sont : " . intval($this->_pv ) . "</br>"
-        . " mon expérience est : " . intval($this->_experience) . "</br>"
-        . "</br>". "</br>");
-
-        return $this;
+        print("Je suis le " . self::$_id++ . "ème personnage");
     }
 
     // Une méthode qui frappera un personnage ( suivant la force qu'il a )
     public function frapper(Personnage $adversaire) {
         $adversaire->setPv($adversaire->getPv() -  $this->getForce());
-        print("<br/>".$this->getNom()." frappe ". $adversaire->getNom());
+        print("<br/>".$this->getNom()." frappe ". $adversaire->getNom() . "</br>" . "</br>");
     }
 
     // Une méthode augmentant l'attribut $expérience du personnage
-    public function gagnerExperience() 
+    public function gagnerExperience():Personnage
     {
         $this->setExperience($this->getExperience() + 1);
 
@@ -74,8 +81,9 @@ class Personnage {
      */ 
     public function setForce(int $force)
     {
+        if (in_array($force, array(self::FORCE_PETITE, self::FORCE_MOYENNE, self::FORCE_GRANDE))) {
         $this->_force = $force;
-
+        }
         return $this;
     }
 
@@ -92,7 +100,7 @@ class Personnage {
      *
      * @return  self
      */ 
-    public function setExperience(int $experience)
+    public function setExperience(int $experience):Personnage
     {
         $this->_experience = $experience;
 
@@ -116,7 +124,7 @@ class Personnage {
      *
      * @return  self
      */ 
-    public function setPv(int $pv)
+    public function setPv(int $pv):Personnage
     {
         $this->_pv = $pv;
 
