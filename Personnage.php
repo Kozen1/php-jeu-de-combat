@@ -1,7 +1,7 @@
 <?php
 
 class Personnage {
-    private static $_id = 0;
+    private $_id; // Son id
     private $_nom; // Son nom
     private $_force; // La force du personnage
     private $_experience; // Son exprience
@@ -11,12 +11,18 @@ class Personnage {
     const FORCE_MOYENNE = 50;
     const FORCE_GRANDE = 80;
 
-    public function __construct(string $nom, int $force) {
-        self::$_id++;
-        $this->_nom = $nom;
-        $this->setPv(100);
-        $this->setForce($force);
-        $this->setExperience(0);
+    public function __construct(array $ligne) {
+        $this->hydrate($ligne);
+    }
+
+    public function hydrate(array $ligne) {
+        foreach ($ligne as $key => $value) {
+            $mutateur = "set".ucfirst($key);
+            if (method_exists($this, $mutateur)) {
+            $this->$mutateur($value);
+            }
+        }
+        print("</br>");
     }
 
     public function __toString() {
@@ -46,6 +52,7 @@ class Personnage {
         return $this;
     }
 
+    
     /**
      * Get the value of _nom
      */ 
@@ -59,7 +66,7 @@ class Personnage {
      *
      * @return  self
      */ 
-    public function set_nom(string $nom)
+    public function setNom(string $nom)
     {
         $this->_nom = $nom;
 
@@ -83,6 +90,9 @@ class Personnage {
     {
         if (in_array($force, array(self::FORCE_PETITE, self::FORCE_MOYENNE, self::FORCE_GRANDE))) {
         $this->_force = $force;
+        }
+        else {
+            $this->_force= 0;
         }
         return $this;
     }
@@ -127,6 +137,26 @@ class Personnage {
     public function setPv(int $pv):Personnage
     {
         $this->_pv = $pv;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of _id
+     */ 
+    public function getId()
+    {
+        return $this->_id;
+    }
+
+    /**
+     * Set the value of _id
+     *
+     * @return  self
+     */ 
+    public function setId($id)
+    {
+        $this->_id = $id;
 
         return $this;
     }

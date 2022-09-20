@@ -34,13 +34,16 @@ try {
     $db = new PDO($dsn, $user, $password, $options);
     if ($db) {
         print('<br/>Lecture dans la base de données :');
-        $request = $db->query('SELECT id, nom, `force`, degats, niveau, experience FROM personnages;');
+        $request = $db->query('SELECT id, nom, `force`, pv, experience FROM personnages;');
         // Chaque entrée sera récupérée et placée dans un tableau (array).
         while ($ligne = $request->fetch(PDO::FETCH_ASSOC))
         {
-            print('<br/>' . $ligne['nom'] . ' a ' . $ligne['force'] . ' de force, '
-             . $ligne['degats'] . ' de dégâts, ' . $ligne['experience'] . ' d\'expérience et est au niveau'
-             . $ligne['niveau']);
+            $perso = new Personnage($ligne);
+            print($perso->getNom() . "<br/>" . $perso->getForce() . "<br/>");
+            /*print('<br/>' . $ligne['nom'] . ' a ' . $ligne['force'] . ' de force, '
+             . $ligne['pv'] . ' de pv, ' . $ligne['experience'] . ' d\'expérience'
+             );*/
+            
         }
     }
 } catch (PDOException $e) {
