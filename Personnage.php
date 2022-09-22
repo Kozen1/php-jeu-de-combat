@@ -11,6 +11,10 @@ class Personnage {
     const FORCE_MOYENNE = 50;
     const FORCE_GRANDE = 80;
 
+    const CEST_MOI = 1;
+    const PERSONNAGE_TUE = 2;
+    const PERSONNAGE_FRAPPE = 3;
+
     public function __construct(array $ligne) {
         $this->hydrate($ligne);
     }

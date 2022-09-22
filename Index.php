@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'conf.php';
 
 function chargerClasse($classe)
@@ -33,18 +34,61 @@ try {
     );
     $db = new PDO($dsn, $user, $password, $options);
     if ($db) {
-        print('<br/>Lecture dans la base de données :');
-        $request = $db->query('SELECT id, nom, `force`, pv, experience FROM personnages;');
-        // Chaque entrée sera récupérée et placée dans un tableau (array).
-        while ($ligne = $request->fetch(PDO::FETCH_ASSOC))
-        {
-            $perso = new Personnage($ligne);
-            print($perso->getNom() . "<br/>" . $perso->getForce() . "<br/>");
-            /*print('<br/>' . $ligne['nom'] . ' a ' . $ligne['force'] . ' de force, '
-             . $ligne['pv'] . ' de pv, ' . $ligne['experience'] . ' d\'expérience'
-             );*/
-            
-        }
+        $pm = new PersonnagesManager($db);
+        // $perso4 = new Personnage(array('nom' => 'Bart', 'force' => 50, 'pv' => 140, 'experience' => 0));
+        // $pm->add($perso4);
+
+?>
+
+        <!DOCTYPE html>
+        <html lang="en">
+
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+
+        <body>
+
+            <form action="Recap.php" method="post">
+                <div>
+                    Nom : <input type="text" name="nom" />
+                    <input type="submit" value="Créer ce personnage" name="creer" />
+                </div>
+            </form>
+
+            <table border=1>
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Force</th>
+                    <th>Expérience</th>
+                    <th>Pv</th>
+                </tr>
+
+                <tr>
+                    <?php
+                    $personnages = $pm->getList();
+                    foreach ($personnages as $personnage) {
+                        print('<tr>');
+                        print('<td>' . $personnage->getId() . '</td>');
+                        print('<td>' . $personnage->getNom() . '</td>');
+                        print('<td>' . $personnage->getForce() . '</td>');
+                        print('<td>' . $personnage->getExperience() . '</td>');
+                        print('<td>' . $personnage->getPv() . '</td>');
+                        print('/<tr>');
+                    }
+                    ?>
+                </tr>
+            </table>
+        </body>
+
+        </html>
+
+<?php
+
     }
 } catch (PDOException $e) {
     print('<br/>Erreur de connexion : ' . $e->getMessage());
