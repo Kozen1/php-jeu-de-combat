@@ -73,6 +73,19 @@ class PersonnagesManager
     {
     }
 
+    public function personnagesExists($infos) {
+        // On vérifie si un personnages ayant pour id $infos existe
+        if(is_int($infos)) {
+            return (bool) $this->_db->query('SELECT COUNT(*) FROM personnages WHERE id='.$infos)->fetchColumn();
+        } 
+        // Sinon on vérifie que le nom existe ou pas
+        $existe = $this->_db->prepare('SELECT COUNT(*) FROM personnages WHERE nom = :nom');
+        $existe->execute([':nom' => $infos]);
+
+        return (bool) $existe->fetchColumn();
+
+    }
+
     public function setDb(PDO $db)
     {
         $this->_db = $db;
